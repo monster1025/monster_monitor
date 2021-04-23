@@ -5,6 +5,7 @@ using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
 using MonsterMonitor.Logic.ProcessMonitor;
 using MonsterMonitor.Logic.Settings;
+using MonsterMonitor.Logic.Update;
 using MonsterMonitor.UI;
 using MonsterMonitor.UI.Startup;
 using MonsterMonitor.UI.Tray;
@@ -31,6 +32,7 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<FrmMain>().AsSelf().AsImplementedInterfaces();
             _builder.RegisterType<NoSleep>().As<INoSleep>().AsImplementedInterfaces();
             _builder.RegisterType<AuthMonitor>().As<IAuthMonitor>().AsImplementedInterfaces();
+            _builder.RegisterType<Updater>().As<IUpdater>().AsImplementedInterfaces();
 
             _builder.Register(c=>
                 new ProcessMonitor("3proxy", "App_Data\\3proxy\\3proxy.exe", "3pr.cfg")
