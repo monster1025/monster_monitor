@@ -13,11 +13,13 @@ namespace MonsterMonitor.Logic.Update
     public class Updater : IUpdater
     {
         private readonly ILogger _log;
+        private readonly Settings.Settings _settings;
         private double _downloadPercent = 0;
 
-        public Updater(ILogger log)
+        public Updater(ILogger log, Settings.Settings settings)
         {
             _log = log;
+            _settings = settings;
         }
 
         private const string GithubUser = "monster1025";
@@ -153,6 +155,10 @@ namespace MonsterMonitor.Logic.Update
             {
                 using (var client = new WebClient())
                 {
+                    if (!string.IsNullOrEmpty(_settings.Proxy))
+                    {
+                        client.Proxy = GetProxy(_settings.Proxy);
+                    }
                     client.Headers.Add("User-Agent",
                         "Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0");
                     client.DownloadProgressChanged += ClientOnDownloadProgressChanged;
@@ -186,6 +192,10 @@ namespace MonsterMonitor.Logic.Update
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
                 request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 request.UserAgent = "Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0";
+                if (!string.IsNullOrEmpty(_settings.Proxy))
+                {
+                    request.Proxy = GetProxy(_settings.Proxy);
+                }
 
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 using (Stream stream = response.GetResponseStream())
@@ -198,6 +208,18 @@ namespace MonsterMonitor.Logic.Update
             {
                 return "";
             }
+        }
+
+        private WebProxy GetProxy(string proxyUri)
+        {
+            var proxy = new WebProxy(new Uri(proxyUri), false);
+            var cc = new CredentialCache();
+            cc.Add(
+                new Uri(proxyUri),
+                "Negotiate", // if we don't set it to "Kerberos" we get error 407 with ---> the function requested is not supported.
+                CredentialCache.DefaultNetworkCredentials);
+            proxy.Credentials = cc;
+            return proxy;
         }
     }
 }

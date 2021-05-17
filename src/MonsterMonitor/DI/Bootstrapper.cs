@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Autofac;
+using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
 using MonsterMonitor.Logic.ProcessMonitor;
@@ -33,6 +34,7 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<NoSleep>().As<INoSleep>().AsImplementedInterfaces();
             _builder.RegisterType<AuthMonitor>().As<IAuthMonitor>().AsImplementedInterfaces();
             _builder.RegisterType<Updater>().As<IUpdater>().AsImplementedInterfaces();
+            _builder.RegisterType<ConnectionMonitor>().As<IConnectionMonitor>().AsImplementedInterfaces();
 
             _builder.Register(c=>
                 new ProcessMonitor("3proxy", "App_Data\\3proxy\\3proxy.exe", "3pr.cfg")
@@ -40,6 +42,10 @@ namespace MonsterMonitor.DI
 
             _builder.Register(c =>
                 new ProcessMonitor("px", "App_Data\\px-v0.4.0\\px.exe")
+            ).AsSelf().AsImplementedInterfaces();
+            
+            _builder.Register(c =>
+                new ProcessMonitor("myentunnel", "App_Data\\MyEnTunnel\\myentunnel.exe")
             ).AsSelf().AsImplementedInterfaces();
 
             var container = _builder.Build();

@@ -36,6 +36,7 @@ namespace MonsterMonitor.UI
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.tmrUpdate = new System.Windows.Forms.Timer(this.components);
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkBox1
@@ -81,11 +82,22 @@ namespace MonsterMonitor.UI
             this.tmrUpdate.Interval = 1000;
             this.tmrUpdate.Tick += new System.EventHandler(this.tmrUpdate_Tick);
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(13, 67);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(109, 21);
+            this.checkBox3.TabIndex = 4;
+            this.checkBox3.Text = "myEnTunnel";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 77);
+            this.ClientSize = new System.Drawing.Size(443, 100);
+            this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.checkBox2);
@@ -108,6 +120,7 @@ namespace MonsterMonitor.UI
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Timer tmrUpdate;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

@@ -89,6 +89,8 @@
   <ItemGroup>
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="Logic\Auth\AuthMonitor.cs" />
+    <Compile Include="Logic\ConnectionMonitor.cs" />
+    <Compile Include="Logic\IConnectionMonitor.cs" />
     <Compile Include="Logic\Settings\Settings.cs" />
     <Compile Include="Logic\Settings\PasswordEncryptionClass.cs" />
     <Compile Include="Logic\Update\GitHubDataObjects.cs" />
@@ -125,6 +127,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="App_Data\3proxy\3pr.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\MyEnTunnel\en.lng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_Data\MyEnTunnel\myentunnel_lng.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App_Data\px-v0.4.0\base_library.zip">
@@ -207,6 +215,24 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="App_Data\3proxy\3proxy.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\MyEnTunnel\license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\MyEnTunnel\localports.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\MyEnTunnel\myentunnel.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\MyEnTunnel\plink.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\MyEnTunnel\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\MyEnTunnel\remoteports.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\px-v0.4.0\api-ms-win-core-console-l1-1-0.dll">

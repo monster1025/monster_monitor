@@ -9,7 +9,8 @@ namespace MonsterMonitor.Logic.Settings
     public class Settings
     {
         public string SystemPassword { get; set; }
-        
+        public string Proxy { get; set; }
+
         public static Settings Load()
         {
             var configDir = Application.StartupPath.Replace(Application.ProductVersion, "");

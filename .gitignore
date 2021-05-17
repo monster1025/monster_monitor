@@ -14,6 +14,9 @@ syntax: glob
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+#settings
+myentunnel.ini
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

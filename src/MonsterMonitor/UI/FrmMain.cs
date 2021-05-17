@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
 using MonsterMonitor.Logic.ProcessMonitor;
@@ -19,12 +19,13 @@ namespace MonsterMonitor.UI
         private readonly IEnumerable<IProcessMonitor> _processMonitors;
         private readonly INoSleep _noSleep;
         private readonly IAuthMonitor _authMonitor;
+        private readonly IConnectionMonitor _connectionMonitor;
         private readonly IUpdater _updater;
         private readonly ILogger _logger;
         private readonly Settings _settings;
         private bool _updateChecked;
 
-        public FrmMain(ITrayMenu trayIcon, IEnumerable<IProcessMonitor> processMonitors, INoSleep noSleep, IAuthMonitor authMonitor, IUpdater updater, ILogger logger, Settings settings)
+        public FrmMain(ITrayMenu trayIcon, IEnumerable<IProcessMonitor> processMonitors, INoSleep noSleep, IAuthMonitor authMonitor, IConnectionMonitor connectionMonitor, IUpdater updater, ILogger logger, Settings settings)
         {
             InitializeComponent();
 
@@ -32,6 +33,7 @@ namespace MonsterMonitor.UI
             _processMonitors = processMonitors;
             _noSleep = noSleep;
             _authMonitor = authMonitor;
+            _connectionMonitor = connectionMonitor;
             _updater = updater;
             _logger = logger;
             _settings = settings;
@@ -55,7 +57,7 @@ namespace MonsterMonitor.UI
             this.Text = this.Text + " v" + Application.ProductVersion;
 
             txtPassword.Text = _settings.SystemPassword;
-            var checkboxes = new List<CheckBox> {checkBox1, checkBox2};
+            var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
             int i = 0;
             foreach (var processMonitor in _processMonitors)
@@ -67,6 +69,7 @@ namespace MonsterMonitor.UI
             }
             _noSleep.StartMonitor();
             _authMonitor.StartMonitor();
+            _connectionMonitor.StartMonitor();
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
