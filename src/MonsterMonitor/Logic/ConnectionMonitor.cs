@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.PeerResolvers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MonsterMonitor.Logic.ProcessMonitor;
 using NLog;
 
@@ -34,32 +36,33 @@ namespace MonsterMonitor.Logic
             int fails = 0;
             while (true)
             {
-                string result = "";
                 try
                 { 
-                    result = await _client.GetStringAsync("http://127.0.0.1:7777/raw");
+                    var result = await _client.GetAsync("http://127.0.0.1:7777/raw");
+                    if (result.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        fails = 0;
+                    }
+                    else
+                    {
+                        fails++;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _logger.Warn($"Error ping check ({fails}): {ex}");
+                    MessageBox.Show($"Error ping check ({fails}): {ex}", "");
                 }
 
-                if (string.IsNullOrEmpty(result))
-                {
-                    fails++;
-                }
-                else
-                {
-                    fails = 0;
-                }
-
-                if (fails > 10)
+                if (fails > 3)
                 {
                     await Task.Delay(TimeSpan.FromMinutes(1));
                     var process = _processMonitors.FirstOrDefault(f => f.ProcessName.Contains("myentunnel"));
                     process?.Kill();
                     fails = 0;
                 }
+
+                await Task.Delay(TimeSpan.FromSeconds(60));
             }
         }
     }
