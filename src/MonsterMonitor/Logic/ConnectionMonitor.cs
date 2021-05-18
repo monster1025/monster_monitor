@@ -5,18 +5,17 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using MonsterMonitor.Logic.ProcessMonitor;
-using NLog;
 
 namespace MonsterMonitor.Logic
 {
     public class ConnectionMonitor: IConnectionMonitor
     {
         private readonly IEnumerable<IProcessMonitor> _processMonitors;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
         private readonly Settings.Settings _settings;
         private readonly HttpClient _client;
 
-        public ConnectionMonitor(IEnumerable<IProcessMonitor> processMonitors, ILogger logger, Settings.Settings settings)
+        public ConnectionMonitor(IEnumerable<IProcessMonitor> processMonitors, ILog logger, Settings.Settings settings)
         {
             _processMonitors = processMonitors;
             _logger = logger;

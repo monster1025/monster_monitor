@@ -1,25 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
+using MonsterMonitor.Logic.ProcessMonitor;
 using Newtonsoft.Json;
-using NLog;
 
 namespace MonsterMonitor.Logic.Update
 {
     public class Updater : IUpdater
     {
-        private readonly ILogger _log;
+        private readonly ILog _log;
         private readonly Settings.Settings _settings;
+        private readonly IEnumerable<IProcessMonitor> _processMonitors;
         private double _downloadPercent = 0;
 
-        public Updater(ILogger log, Settings.Settings settings)
+        public Updater(ILog log, Settings.Settings settings, IEnumerable<IProcessMonitor> processMonitors)
         {
             _log = log;
             _settings = settings;
+            _processMonitors = processMonitors;
         }
 
         private const string GithubUser = "monster1025";
@@ -104,7 +107,7 @@ namespace MonsterMonitor.Logic.Update
                 Directory.CreateDirectory(bkpDir);
 
                 //забэкапим все папки
-                foreach (var dir in Directory.GetDirectories(appFile.DirectoryName).Where(f=>!f.EndsWith("bkp")))
+                foreach (var dir in Directory.GetDirectories(appFile.DirectoryName).Where(f=>!f.EndsWith("bkp") && !f.EndsWith("App_Data")))
                 {
                     var dirName = new DirectoryInfo(dir);
                     var bkpDirPath = Path.Combine(bkpDir, dirName.Name);
@@ -112,6 +115,7 @@ namespace MonsterMonitor.Logic.Update
                         Directory.Delete(bkpDirPath, true);
                     Directory.Move(dir, bkpDirPath);
                 }
+
                 //и файлы
                 foreach (var file in Directory.GetFiles(appFile.DirectoryName).Where(f=>!f.EndsWith("update.zip")))
                 {

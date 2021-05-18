@@ -35,12 +35,14 @@
             this.txtSshHost = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chkPingCheck = new System.Windows.Forms.CheckBox();
+            this.txtUpperProxy = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // chkAutostart
             // 
             this.chkAutostart.AutoSize = true;
-            this.chkAutostart.Location = new System.Drawing.Point(139, 62);
+            this.chkAutostart.Location = new System.Drawing.Point(139, 102);
             this.chkAutostart.Margin = new System.Windows.Forms.Padding(4);
             this.chkAutostart.Name = "chkAutostart";
             this.chkAutostart.Size = new System.Drawing.Size(118, 21);
@@ -68,7 +70,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(139, 126);
+            this.btnSave.Location = new System.Drawing.Point(139, 170);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 28);
@@ -97,7 +99,7 @@
             // chkPingCheck
             // 
             this.chkPingCheck.AutoSize = true;
-            this.chkPingCheck.Location = new System.Drawing.Point(139, 91);
+            this.chkPingCheck.Location = new System.Drawing.Point(139, 131);
             this.chkPingCheck.Margin = new System.Windows.Forms.Padding(4);
             this.chkPingCheck.Name = "chkPingCheck";
             this.chkPingCheck.Size = new System.Drawing.Size(139, 21);
@@ -105,11 +107,30 @@
             this.chkPingCheck.Text = "\"PING\" проверка";
             this.chkPingCheck.UseVisualStyleBackColor = true;
             // 
+            // txtUpperProxy
+            // 
+            this.txtUpperProxy.Location = new System.Drawing.Point(139, 61);
+            this.txtUpperProxy.Name = "txtUpperProxy";
+            this.txtUpperProxy.Size = new System.Drawing.Size(191, 22);
+            this.txtUpperProxy.TabIndex = 57;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(34, 64);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 17);
+            this.label2.TabIndex = 56;
+            this.label2.Text = "Корп. Proxy:";
+            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 177);
+            this.ClientSize = new System.Drawing.Size(384, 205);
+            this.Controls.Add(this.txtUpperProxy);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.chkPingCheck);
             this.Controls.Add(this.txtSshHost);
             this.Controls.Add(this.label1);
@@ -138,5 +159,7 @@
         private System.Windows.Forms.TextBox txtSshHost;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkPingCheck;
+        private System.Windows.Forms.TextBox txtUpperProxy;
+        private System.Windows.Forms.Label label2;
     }
 }

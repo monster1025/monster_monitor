@@ -9,7 +9,6 @@ using MonsterMonitor.Logic.ProcessMonitor;
 using MonsterMonitor.Logic.Settings;
 using MonsterMonitor.Logic.Update;
 using MonsterMonitor.UI.Tray;
-using NLog;
 
 namespace MonsterMonitor.UI
 {
@@ -21,7 +20,7 @@ namespace MonsterMonitor.UI
         private readonly IAuthMonitor _authMonitor;
         private readonly IConnectionMonitor _connectionMonitor;
         private readonly IUpdater _updater;
-        private readonly ILogger _logger;
+        private readonly ILog _logger;
         private readonly Settings _settings;
         private readonly frmSettings _frmSettings;
         private bool _updateChecked;
@@ -33,7 +32,7 @@ namespace MonsterMonitor.UI
             IAuthMonitor authMonitor, 
             IConnectionMonitor connectionMonitor, 
             IUpdater updater, 
-            ILogger logger, 
+            ILog logger,
             Settings settings,
             frmSettings frmSettings)
         {
@@ -65,6 +64,11 @@ namespace MonsterMonitor.UI
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            _logger.SetTarget(message =>
+            {
+                txtLog.Invoke(new Action<string>(text => txtLog.AppendText(text)), message + Environment.NewLine);
+            });
+
             this.Text = this.Text + " v" + Application.ProductVersion;
             var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
@@ -82,25 +86,12 @@ namespace MonsterMonitor.UI
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                _logger.Trace("Приложение запущено в режиме отладки. Отключаю обновление.");
-                Log("Приложение запущено в режиме отладки. Отключаю обновление.");
-                tmrUpdate.Enabled = false;
+                _logger.Info("Приложение запущено в режиме отладки. Отключаю обновление.");
+                tmrUpdate.Enabled = true;
             }
             else
             {
                 tmrUpdate.Enabled = true;
-            }
-        }
-
-        private void Log(string log)
-        {
-            if (txtLog.Text == "")
-            {
-                txtLog.Text += log;
-            }
-            else
-            {
-                txtLog.Text += "\r\n" + log;
             }
         }
 
@@ -153,7 +144,7 @@ namespace MonsterMonitor.UI
             catch (Exception ex)
             {
                 //в процессе обновления ни при каком раскладе мы не должны уложить бота. 
-                _logger.Error($"Фатальная ошибка в процессе обновления: {ex.Message}");
+                _logger.Info($"Фатальная ошибка в процессе обновления: {ex.Message}");
             }
         }
 

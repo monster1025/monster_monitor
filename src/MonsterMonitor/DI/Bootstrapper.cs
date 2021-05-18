@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
@@ -8,7 +9,6 @@ using MonsterMonitor.Logic.Update;
 using MonsterMonitor.UI;
 using MonsterMonitor.UI.Startup;
 using MonsterMonitor.UI.Tray;
-using NLog;
 
 namespace MonsterMonitor.DI
 {
@@ -22,7 +22,6 @@ namespace MonsterMonitor.DI
 
         public IContainer Build()
         {
-            _builder.Register(f => LogManager.GetLogger("main.log")).As<ILogger>().AsSelf();
             _builder.Register(f => new TrayMenu()).As<ITrayMenu>().AsSelf();
 
             _builder.Register(c=>Settings.Load()).AsSelf().AsImplementedInterfaces().SingleInstance();
@@ -34,6 +33,8 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<Updater>().As<IUpdater>().AsImplementedInterfaces();
             _builder.RegisterType<ConnectionMonitor>().As<IConnectionMonitor>().AsImplementedInterfaces();
             _builder.RegisterType<frmSettings>().AsSelf().SingleInstance();
+            _builder.RegisterType<FrmMain>().AsSelf().SingleInstance();
+            _builder.RegisterType<Logger>().As<ILog>().SingleInstance();
 
             _builder.Register(c=>
                 new ProcessMonitor("3proxy", "App_Data\\3proxy\\3proxy.exe", "3pr.cfg")
