@@ -131,14 +131,7 @@ namespace MonsterMonitor.UI
                 {
                     //если обновились - отключаем до рестарта
                     tmrUpdate.Enabled = false;
-                    var result = MessageBox.Show($"Приложение обновлено до новой версии. Перезапустить сейчас?",
-                        "Обновление",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes)
-                    {
-                        _updater.SelfRestart();
-                    }
+                    _updater.SelfRestart();
                 }
             }
             catch (Exception ex)

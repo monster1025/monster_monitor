@@ -26,7 +26,6 @@ namespace MonsterMonitor.Logic.ProcessMonitor
         public void StartMonitor()
         {
             Task.Run(async () => await CheckProcess());
-            //CheckProcess().GetAwaiter().GetResult();
         }
 
         public bool IsRunning()

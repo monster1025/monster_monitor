@@ -75,6 +75,20 @@ namespace MonsterMonitor.Logic.Update
                     return false;
                 }
 
+                var msgboxResult = MessageBox.Show($"Приложение обновлено до новой версии. Перезапустить сейчас?",
+                    "Обновление",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+                if (msgboxResult != DialogResult.Yes)
+                {
+                    return false;
+                }
+
+                foreach (var processMonitor in _processMonitors)
+                {
+                    processMonitor.Stop();
+                }
+
                 var result = InstallUpdate(gitVersion, "update.zip");
                 if (result)
                 {
@@ -125,7 +139,18 @@ namespace MonsterMonitor.Logic.Update
                 //распакуем архив
                 using (ZipArchive archive = ZipFile.OpenRead(Path.Combine(appFile.DirectoryName, updateFile)))
                 {
-                    archive.ExtractToDirectory(appFile.DirectoryName);
+                    foreach (var archiveEntry in archive.Entries)
+                    {
+                        try
+                        {
+                            archiveEntry.ExtractToFile(Path.Combine(appFile.DirectoryName, archiveEntry.FullName), true);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                    //archive.ExtractToDirectory(appFile.DirectoryName);
                 }
 
                 _log.Info("Обновление установлено. Перезапустите программу для применения изменений.");
