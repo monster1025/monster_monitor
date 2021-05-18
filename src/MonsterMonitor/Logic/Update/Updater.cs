@@ -131,7 +131,7 @@ namespace MonsterMonitor.Logic.Update
                 }
 
                 //и файлы
-                foreach (var file in Directory.GetFiles(appFile.DirectoryName).Where(f=>!f.EndsWith("update.zip")))
+                foreach (var file in Directory.GetFiles(appFile.DirectoryName).Where(f=>!f.EndsWith("update.zip") && !f.EndsWith("settings.json")))
                 {
                     File.Move(file, Path.Combine(bkpDir, new FileInfo(file).Name));
                 }
@@ -150,7 +150,6 @@ namespace MonsterMonitor.Logic.Update
 
                         }
                     }
-                    //archive.ExtractToDirectory(appFile.DirectoryName);
                 }
 
                 _log.Info("Обновление установлено. Перезапустите программу для применения изменений.");
