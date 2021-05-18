@@ -37,12 +37,14 @@
             this.chkPingCheck = new System.Windows.Forms.CheckBox();
             this.txtUpperProxy = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.txt3ProxyPassword = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // chkAutostart
             // 
             this.chkAutostart.AutoSize = true;
-            this.chkAutostart.Location = new System.Drawing.Point(139, 102);
+            this.chkAutostart.Location = new System.Drawing.Point(139, 135);
             this.chkAutostart.Margin = new System.Windows.Forms.Padding(4);
             this.chkAutostart.Name = "chkAutostart";
             this.chkAutostart.Size = new System.Drawing.Size(118, 21);
@@ -70,7 +72,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(139, 170);
+            this.btnSave.Location = new System.Drawing.Point(139, 203);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 28);
@@ -99,7 +101,7 @@
             // chkPingCheck
             // 
             this.chkPingCheck.AutoSize = true;
-            this.chkPingCheck.Location = new System.Drawing.Point(139, 131);
+            this.chkPingCheck.Location = new System.Drawing.Point(139, 164);
             this.chkPingCheck.Margin = new System.Windows.Forms.Padding(4);
             this.chkPingCheck.Name = "chkPingCheck";
             this.chkPingCheck.Size = new System.Drawing.Size(139, 21);
@@ -124,11 +126,30 @@
             this.label2.TabIndex = 56;
             this.label2.Text = "Корп. Proxy:";
             // 
+            // txt3ProxyPassword
+            // 
+            this.txt3ProxyPassword.Location = new System.Drawing.Point(139, 89);
+            this.txt3ProxyPassword.Name = "txt3ProxyPassword";
+            this.txt3ProxyPassword.Size = new System.Drawing.Size(191, 22);
+            this.txt3ProxyPassword.TabIndex = 59;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(34, 92);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(108, 17);
+            this.label3.TabIndex = 58;
+            this.label3.Text = "Пароль 3Proxy:";
+            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 205);
+            this.ClientSize = new System.Drawing.Size(384, 244);
+            this.Controls.Add(this.txt3ProxyPassword);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.txtUpperProxy);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.chkPingCheck);
@@ -161,5 +182,7 @@
         private System.Windows.Forms.CheckBox chkPingCheck;
         private System.Windows.Forms.TextBox txtUpperProxy;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txt3ProxyPassword;
+        private System.Windows.Forms.Label label3;
     }
 }

@@ -32,6 +32,7 @@ namespace MonsterMonitor.UI
             txtSshHost.Text = settings.SshHost;
             chkPingCheck.Checked = settings.PingCheck;
             txtUpperProxy.Text = settings.Proxy;
+            txt3ProxyPassword.Text = settings.ThreeProxyPassword;
         }
 
         public Settings ReadSettingsAndLock()
@@ -41,7 +42,8 @@ namespace MonsterMonitor.UI
                 SystemPassword = txtSTerraPassword.Text,
                 SshHost = txtSshHost.Text,
                 PingCheck = chkPingCheck.Checked,
-                Proxy = txtUpperProxy.Text
+                Proxy = txtUpperProxy.Text,
+                ThreeProxyPassword = txt3ProxyPassword.Text
             };
 
             return settings;

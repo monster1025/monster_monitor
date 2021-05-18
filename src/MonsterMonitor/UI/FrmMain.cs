@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MonsterMonitor.Log;
@@ -63,6 +64,15 @@ namespace MonsterMonitor.UI
             base.WndProc(ref message);
         }
 
+        private void Generate3ProxyConfig(Settings settings)
+        {
+            var config = $"users admin:CL:{settings.ThreeProxyPassword}\r\n" +
+                               "auth strong\r\n"+
+                               "proxy -n -p3328";
+            File.WriteAllText(Path
+                .Combine(Application.StartupPath, "App_Data", "3proxy", "3pr.cfg"), config);
+        }
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             _logger.SetTarget(message =>
@@ -73,11 +83,14 @@ namespace MonsterMonitor.UI
             this.Text = this.Text + " v" + Application.ProductVersion;
             var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
+            Generate3ProxyConfig(_settings);
+            _logger.Info($"Вы можете авторизоваться на прокси по кредам admin:{_settings.ThreeProxyPassword}");
+
             int i = 0;
             foreach (var processMonitor in _processMonitors)
             {
                 processMonitor.StartMonitor();
-                Task.Delay(TimeSpan.FromMilliseconds(100)).GetAwaiter().GetResult();
+                Task.Delay(TimeSpan.FromMilliseconds(500)).GetAwaiter().GetResult();
                 checkboxes[i].Checked = processMonitor.IsRunning();
                 i++;
             }
@@ -88,7 +101,7 @@ namespace MonsterMonitor.UI
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 _logger.Info("Приложение запущено в режиме отладки. Отключаю обновление.");
-                tmrUpdate.Enabled = true;
+                tmrUpdate.Enabled = false;
             }
             else
             {

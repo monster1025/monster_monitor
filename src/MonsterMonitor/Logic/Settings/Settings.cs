@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -11,6 +13,7 @@ namespace MonsterMonitor.Logic.Settings
         public string Proxy { get; set; }
         public string SshHost { get; set; }
         public bool PingCheck { get; set; }
+        public string ThreeProxyPassword { get; set; }
 
         public static Settings Load()
         {
@@ -18,7 +21,10 @@ namespace MonsterMonitor.Logic.Settings
             var settingsPath = Path.Combine(configDir, _settingsFileName);
             if (!File.Exists(settingsPath))
             {
-                return new Settings();
+                return new Settings
+                {
+                    ThreeProxyPassword = CreatePassword(10)
+                };
             }
 
             var settingsText = File.ReadAllText(settingsPath);
@@ -55,5 +61,17 @@ namespace MonsterMonitor.Logic.Settings
         }
 
         private static readonly string _settingsFileName = "settings.json";
+
+        private static string CreatePassword(int length)
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString();
+        }
     }
 }
