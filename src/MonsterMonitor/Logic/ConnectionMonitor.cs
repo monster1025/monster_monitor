@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.ServiceModel;
-using System.ServiceModel.PeerResolvers;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using MonsterMonitor.Logic.ProcessMonitor;
 using NLog;
 
@@ -17,13 +13,18 @@ namespace MonsterMonitor.Logic
     {
         private readonly IEnumerable<IProcessMonitor> _processMonitors;
         private readonly ILogger _logger;
-        private HttpClient _client;
+        private readonly Settings.Settings _settings;
+        private readonly HttpClient _client;
 
-        public ConnectionMonitor(IEnumerable<IProcessMonitor> processMonitors, ILogger logger)
+        public ConnectionMonitor(IEnumerable<IProcessMonitor> processMonitors, ILogger logger, Settings.Settings settings)
         {
             _processMonitors = processMonitors;
             _logger = logger;
-            _client = new HttpClient();
+            _settings = settings;
+            _client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(5)
+            };
         }
 
         public void StartMonitor()
@@ -36,33 +37,36 @@ namespace MonsterMonitor.Logic
             int fails = 0;
             while (true)
             {
-                try
-                { 
-                    var result = await _client.GetAsync("http://127.0.0.1:7777/raw");
-                    if (result.StatusCode == HttpStatusCode.NotFound)
+                if (_settings.PingCheck)
+                {
+                    try
                     {
-                        fails = 0;
+                        var result = await _client.GetAsync("http://127.0.0.1:7777/raw");
+                        if (result.StatusCode == HttpStatusCode.NotFound)
+                        {
+                            fails = 0;
+                        }
+                        else
+                        {
+                            fails++;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
                         fails++;
+                        _logger.Warn($"Error ping check ({fails}): {ex}");
+                        //MessageBox.Show($"Error ping check ({fails}): {ex}", "");
+                    }
+
+                    if (fails >= 3)
+                    {
+                        var process = _processMonitors.FirstOrDefault(f => f.ProcessName.Contains("myentunnel"));
+                        process?.Kill();
+                        fails = 0;
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.Warn($"Error ping check ({fails}): {ex}");
-                    MessageBox.Show($"Error ping check ({fails}): {ex}", "");
-                }
 
-                if (fails > 3)
-                {
-                    await Task.Delay(TimeSpan.FromMinutes(1));
-                    var process = _processMonitors.FirstOrDefault(f => f.ProcessName.Contains("myentunnel"));
-                    process?.Kill();
-                    fails = 0;
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(60));
+                await Task.Delay(TimeSpan.FromSeconds(30));
             }
         }
     }

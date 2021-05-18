@@ -7,5 +7,6 @@
         void StartMonitor();
         bool IsRunning();
         void Kill();
+        void Stop();
     }
 }

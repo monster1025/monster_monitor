@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,12 +13,14 @@ namespace MonsterMonitor.Logic.ProcessMonitor
         public string ProcessName { get; }
         private readonly string _relativePath;
         private readonly string _args;
+        private CancellationTokenSource _ct { get; set; }
 
         public ProcessMonitor(string processName, string relativePath, string args = null)
         {
             ProcessName = processName;
             _relativePath = relativePath;
             _args = args;
+            _ct = new CancellationTokenSource();
         }
 
         public void StartMonitor()
@@ -42,9 +45,15 @@ namespace MonsterMonitor.Logic.ProcessMonitor
             }
         }
 
+        public void Stop()
+        {
+            _ct.Cancel();
+            Kill();
+        }
+
         private async Task CheckProcess()
         {
-            while (true)
+            while (!_ct.IsCancellationRequested)
             {
                 var processList = Process.GetProcesses();
                 var processInfo = processList.FirstOrDefault(f => f.ProcessName == ProcessName);

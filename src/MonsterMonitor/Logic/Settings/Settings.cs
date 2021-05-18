@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -10,6 +9,8 @@ namespace MonsterMonitor.Logic.Settings
     {
         public string SystemPassword { get; set; }
         public string Proxy { get; set; }
+        public string SshHost { get; set; }
+        public bool PingCheck { get; set; }
 
         public static Settings Load()
         {

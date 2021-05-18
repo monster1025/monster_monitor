@@ -23,9 +23,19 @@ namespace MonsterMonitor.UI
         private readonly IUpdater _updater;
         private readonly ILogger _logger;
         private readonly Settings _settings;
+        private readonly frmSettings _frmSettings;
         private bool _updateChecked;
 
-        public FrmMain(ITrayMenu trayIcon, IEnumerable<IProcessMonitor> processMonitors, INoSleep noSleep, IAuthMonitor authMonitor, IConnectionMonitor connectionMonitor, IUpdater updater, ILogger logger, Settings settings)
+        public FrmMain(
+            ITrayMenu trayIcon, 
+            IEnumerable<IProcessMonitor> processMonitors, 
+            INoSleep noSleep, 
+            IAuthMonitor authMonitor, 
+            IConnectionMonitor connectionMonitor, 
+            IUpdater updater, 
+            ILogger logger, 
+            Settings settings,
+            frmSettings frmSettings)
         {
             InitializeComponent();
 
@@ -37,6 +47,7 @@ namespace MonsterMonitor.UI
             _updater = updater;
             _logger = logger;
             _settings = settings;
+            _frmSettings = frmSettings;
             _trayIcon.Create(this);
         }
 
@@ -55,8 +66,6 @@ namespace MonsterMonitor.UI
         private void frmMain_Load(object sender, EventArgs e)
         {
             this.Text = this.Text + " v" + Application.ProductVersion;
-
-            txtPassword.Text = _settings.SystemPassword;
             var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
             int i = 0;
@@ -74,11 +83,24 @@ namespace MonsterMonitor.UI
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 _logger.Trace("Приложение запущено в режиме отладки. Отключаю обновление.");
-                tmrUpdate.Enabled = true;
+                Log("Приложение запущено в режиме отладки. Отключаю обновление.");
+                tmrUpdate.Enabled = false;
             }
             else
             {
                 tmrUpdate.Enabled = true;
+            }
+        }
+
+        private void Log(string log)
+        {
+            if (txtLog.Text == "")
+            {
+                txtLog.Text += log;
+            }
+            else
+            {
+                txtLog.Text += "\r\n" + log;
             }
         }
 
@@ -88,7 +110,7 @@ namespace MonsterMonitor.UI
 
             foreach (var processMonitor in _processMonitors)
             {
-                processMonitor.Kill();
+                processMonitor.Stop();
             }
         }
 
@@ -106,13 +128,6 @@ namespace MonsterMonitor.UI
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            _settings.SystemPassword = txtPassword.Text;
-            _settings.Save();
-            MessageBox.Show("Saving done", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
             try
@@ -120,7 +135,6 @@ namespace MonsterMonitor.UI
                 var firstTime = !_updateChecked;
                 _updateChecked = true;
                 tmrUpdate.Interval = 1 * 60 * 60 * 1000;
-
                 
                 if (_updater.UpdateToNewVersion(firstTime))
                 {
@@ -141,6 +155,11 @@ namespace MonsterMonitor.UI
                 //в процессе обновления ни при каком раскладе мы не должны уложить бота. 
                 _logger.Error($"Фатальная ошибка в процессе обновления: {ex.Message}");
             }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            _frmSettings.ShowDialog();
         }
     }
 }

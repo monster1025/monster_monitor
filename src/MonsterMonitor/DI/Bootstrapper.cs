@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using Autofac;
+﻿using Autofac;
 using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
@@ -35,6 +33,7 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<AuthMonitor>().As<IAuthMonitor>().AsImplementedInterfaces();
             _builder.RegisterType<Updater>().As<IUpdater>().AsImplementedInterfaces();
             _builder.RegisterType<ConnectionMonitor>().As<IConnectionMonitor>().AsImplementedInterfaces();
+            _builder.RegisterType<frmSettings>().AsSelf().SingleInstance();
 
             _builder.Register(c=>
                 new ProcessMonitor("3proxy", "App_Data\\3proxy\\3proxy.exe", "3pr.cfg")

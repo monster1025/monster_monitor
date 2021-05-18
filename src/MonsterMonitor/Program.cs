@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autofac;
 using MonsterMonitor.DI;
@@ -13,7 +10,7 @@ namespace MonsterMonitor
 {
     static class Program
     {
-        private static readonly Mutex Mutex = new Mutex(true, "{44426B3E-B901-4792-ACEA-1385D79DBAD1}");
+        private static readonly Mutex Mutex = new Mutex(true, "{46426B3E-B901-4792-ACEA-1385D79DBAD1}");
 
         /// <summary>
         /// The main entry point for the application.
