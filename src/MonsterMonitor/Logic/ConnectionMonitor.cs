@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MonsterMonitor.Log;
 using MonsterMonitor.Logic.ProcessMonitor;
 
 namespace MonsterMonitor.Logic
@@ -33,6 +34,9 @@ namespace MonsterMonitor.Logic
 
         private async Task CheckProcess()
         {
+            //Подождем установления коннекта
+            await Task.Delay(TimeSpan.FromSeconds(30));
+
             int fails = 0;
             while (true)
             {

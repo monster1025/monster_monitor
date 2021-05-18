@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
+using MonsterMonitor.Log;
 using MonsterMonitor.Logic.ProcessMonitor;
 using Newtonsoft.Json;
 

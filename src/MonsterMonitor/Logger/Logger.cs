@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 
-namespace MonsterMonitor
+namespace MonsterMonitor.Log
 {
     public class Logger : ILog
     {

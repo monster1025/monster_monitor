@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using MonsterMonitor.Log;
 using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;

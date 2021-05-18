@@ -1,9 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.ServiceModel.Dispatcher;
-using System.Windows.Forms;
 
-namespace MonsterMonitor
+namespace MonsterMonitor.Log
 {
     public interface ILog
     {
