@@ -9,6 +9,7 @@ using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
 using MonsterMonitor.Logic.ProcessMonitor;
 using MonsterMonitor.Logic.Settings;
+using MonsterMonitor.Logic.Ssh;
 using MonsterMonitor.Logic.Update;
 using MonsterMonitor.UI.Tray;
 
@@ -21,6 +22,7 @@ namespace MonsterMonitor.UI
         private readonly INoSleep _noSleep;
         private readonly IAuthMonitor _authMonitor;
         private readonly IConnectionMonitor _connectionMonitor;
+        private readonly ISshTunnel _sshTunnel;
         private readonly IUpdater _updater;
         private readonly ILog _logger;
         private readonly Settings _settings;
@@ -32,7 +34,8 @@ namespace MonsterMonitor.UI
             IEnumerable<IProcessMonitor> processMonitors, 
             INoSleep noSleep, 
             IAuthMonitor authMonitor, 
-            IConnectionMonitor connectionMonitor, 
+            IConnectionMonitor connectionMonitor,
+            ISshTunnel sshTunnel,
             IUpdater updater, 
             ILog logger,
             Settings settings,
@@ -45,6 +48,7 @@ namespace MonsterMonitor.UI
             _noSleep = noSleep;
             _authMonitor = authMonitor;
             _connectionMonitor = connectionMonitor;
+            _sshTunnel = sshTunnel;
             _updater = updater;
             _logger = logger;
             _settings = settings;
@@ -94,6 +98,8 @@ namespace MonsterMonitor.UI
                 checkboxes[i].Checked = processMonitor.IsRunning();
                 i++;
             }
+            _sshTunnel.Start(_settings.SshHost, _settings.SshPort, _settings.SshUser, _settings.SshPassword);
+
             _noSleep.StartMonitor();
             _authMonitor.StartMonitor();
             _connectionMonitor.StartMonitor();

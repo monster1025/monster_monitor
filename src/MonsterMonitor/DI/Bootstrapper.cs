@@ -6,6 +6,7 @@ using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
 using MonsterMonitor.Logic.ProcessMonitor;
 using MonsterMonitor.Logic.Settings;
+using MonsterMonitor.Logic.Ssh;
 using MonsterMonitor.Logic.Update;
 using MonsterMonitor.UI;
 using MonsterMonitor.UI.Startup;
@@ -36,6 +37,7 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<frmSettings>().AsSelf().SingleInstance();
             _builder.RegisterType<FrmMain>().AsSelf().SingleInstance();
             _builder.RegisterType<Logger>().As<ILog>().SingleInstance();
+            _builder.RegisterType<SshTunnel>().As<ISshTunnel>().SingleInstance();
 
             _builder.Register(c=>
                 new ProcessMonitor("3proxy", "App_Data\\3proxy\\3proxy.exe", "3pr.cfg")
@@ -45,9 +47,9 @@ namespace MonsterMonitor.DI
                 new ProcessMonitor("px", "App_Data\\px-v0.4.0\\px.exe")
             ).AsSelf().AsImplementedInterfaces();
             
-            _builder.Register(c =>
-                new ProcessMonitor("myentunnel", "App_Data\\MyEnTunnel\\myentunnel.exe")
-            ).AsSelf().AsImplementedInterfaces();
+            //_builder.Register(c =>
+            //    new ProcessMonitor("myentunnel", "App_Data\\MyEnTunnel\\myentunnel.exe")
+            //).AsSelf().AsImplementedInterfaces();
 
             var container = _builder.Build();
             return container;

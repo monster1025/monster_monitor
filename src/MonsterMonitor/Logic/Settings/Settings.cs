@@ -12,6 +12,9 @@ namespace MonsterMonitor.Logic.Settings
         public string SystemPassword { get; set; }
         public string Proxy { get; set; }
         public string SshHost { get; set; }
+        public int SshPort { get; set; }
+        public string SshUser { get; set; }
+        public string SshPassword { get; set; }
         public bool PingCheck { get; set; }
         public string ThreeProxyPassword { get; set; }
 
@@ -40,6 +43,10 @@ namespace MonsterMonitor.Logic.Settings
                 }
                 var password = new PasswordEncryptionClass().Decrypt("user", settings.SystemPassword, "http://sibur.ru");
                 settings.SystemPassword = password;
+
+                var sshPassword = new PasswordEncryptionClass().Decrypt("sshuser", settings.SshPassword, "http://ssh.ru");
+                settings.SshPassword = sshPassword;
+
             }
             catch (JsonReaderException)
             {
@@ -53,6 +60,9 @@ namespace MonsterMonitor.Logic.Settings
         {
             var password = new PasswordEncryptionClass().Encrypt("user", this.SystemPassword, "http://sibur.ru");
             this.SystemPassword = password;
+
+            var sshPassword = new PasswordEncryptionClass().Encrypt("sshuser", this.SshPassword, "http://ssh.ru");
+            this.SshPassword = sshPassword;
 
             var configDir = Application.StartupPath.Replace(Application.ProductVersion, "");
             var settingsPath = Path.Combine(configDir, _settingsFileName);

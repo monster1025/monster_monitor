@@ -39,12 +39,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txt3ProxyPassword = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.txtSshPort = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtSshUser = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtSshPass = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // chkAutostart
             // 
             this.chkAutostart.AutoSize = true;
-            this.chkAutostart.Location = new System.Drawing.Point(139, 135);
+            this.chkAutostart.Location = new System.Drawing.Point(139, 211);
             this.chkAutostart.Margin = new System.Windows.Forms.Padding(4);
             this.chkAutostart.Name = "chkAutostart";
             this.chkAutostart.Size = new System.Drawing.Size(118, 21);
@@ -72,7 +78,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(139, 203);
+            this.btnSave.Location = new System.Drawing.Point(139, 279);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 28);
@@ -101,7 +107,7 @@
             // chkPingCheck
             // 
             this.chkPingCheck.AutoSize = true;
-            this.chkPingCheck.Location = new System.Drawing.Point(139, 164);
+            this.chkPingCheck.Location = new System.Drawing.Point(139, 240);
             this.chkPingCheck.Margin = new System.Windows.Forms.Padding(4);
             this.chkPingCheck.Name = "chkPingCheck";
             this.chkPingCheck.Size = new System.Drawing.Size(139, 21);
@@ -111,7 +117,7 @@
             // 
             // txtUpperProxy
             // 
-            this.txtUpperProxy.Location = new System.Drawing.Point(139, 61);
+            this.txtUpperProxy.Location = new System.Drawing.Point(139, 145);
             this.txtUpperProxy.Name = "txtUpperProxy";
             this.txtUpperProxy.Size = new System.Drawing.Size(191, 22);
             this.txtUpperProxy.TabIndex = 57;
@@ -119,7 +125,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(34, 64);
+            this.label2.Location = new System.Drawing.Point(34, 148);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(88, 17);
@@ -128,7 +134,7 @@
             // 
             // txt3ProxyPassword
             // 
-            this.txt3ProxyPassword.Location = new System.Drawing.Point(139, 89);
+            this.txt3ProxyPassword.Location = new System.Drawing.Point(139, 173);
             this.txt3ProxyPassword.Name = "txt3ProxyPassword";
             this.txt3ProxyPassword.Size = new System.Drawing.Size(191, 22);
             this.txt3ProxyPassword.TabIndex = 59;
@@ -136,18 +142,77 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(34, 92);
+            this.label3.Location = new System.Drawing.Point(34, 176);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(108, 17);
             this.label3.TabIndex = 58;
             this.label3.Text = "Пароль 3Proxy:";
             // 
+            // txtSshPort
+            // 
+            this.txtSshPort.Location = new System.Drawing.Point(139, 61);
+            this.txtSshPort.Name = "txtSshPort";
+            this.txtSshPort.Size = new System.Drawing.Size(191, 22);
+            this.txtSshPort.TabIndex = 61;
+            this.txtSshPort.Text = "443";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(48, 64);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(71, 17);
+            this.label4.TabIndex = 60;
+            this.label4.Text = "SSH-Port:";
+            // 
+            // txtSshUser
+            // 
+            this.txtSshUser.Location = new System.Drawing.Point(139, 89);
+            this.txtSshUser.Name = "txtSshUser";
+            this.txtSshUser.Size = new System.Drawing.Size(191, 22);
+            this.txtSshUser.TabIndex = 63;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(48, 92);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(74, 17);
+            this.label5.TabIndex = 62;
+            this.label5.Text = "SSH User:";
+            // 
+            // txtSshPass
+            // 
+            this.txtSshPass.Location = new System.Drawing.Point(139, 117);
+            this.txtSshPass.Name = "txtSshPass";
+            this.txtSshPass.Size = new System.Drawing.Size(191, 22);
+            this.txtSshPass.TabIndex = 65;
+            this.txtSshPass.UseSystemPasswordChar = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(48, 120);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(75, 17);
+            this.label7.TabIndex = 64;
+            this.label7.Text = "SSH Pass:";
+            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 244);
+            this.ClientSize = new System.Drawing.Size(384, 319);
+            this.Controls.Add(this.txtSshPass);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtSshUser);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtSshPort);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.txt3ProxyPassword);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtUpperProxy);
@@ -184,5 +249,11 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txt3ProxyPassword;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtSshPort;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtSshUser;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtSshPass;
+        private System.Windows.Forms.Label label7;
     }
 }
