@@ -28,7 +28,7 @@ artifacts:
 deploy:
 - provider: GitHub
   auth_token:
-    secure: $(GITHUB_TOKEN)
+    secure: Jg8vtDMtgadXE5uifFSr5y9KNrGAjvFntqnRHzyuVWkssitctTtVq086svS2zXAq
   artifact: MonsterMonitor.zip
   on:
     APPVEYOR_REPO_TAG: true
