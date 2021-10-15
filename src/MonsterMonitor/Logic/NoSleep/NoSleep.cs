@@ -2,13 +2,21 @@
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MonsterMonitor.Log;
 
 namespace MonsterMonitor.Logic.NoSleep
 {
     public class NoSleep: INoSleep
     {
+        private readonly ILog _logger;
+
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+
+        public NoSleep(ILog logger)
+        {
+            _logger = logger;
+        }
 
         public void StartMonitor()
         {
@@ -19,6 +27,7 @@ namespace MonsterMonitor.Logic.NoSleep
         {
             try
             {
+                _logger.Info("Starting no-sleep");
                 if (SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
                                             | EXECUTION_STATE.ES_DISPLAY_REQUIRED
                                             | EXECUTION_STATE.ES_SYSTEM_REQUIRED
