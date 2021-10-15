@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MonsterMonitor.Log;
@@ -55,8 +56,8 @@ namespace MonsterMonitor.Logic.Ssh
 
         public void Connect(string sshHost, int sshPort, string sshUser, string sshPassword)
         {
-            var connectionInfo = new ConnectionInfo(sshHost, sshPort,
-                sshUser, ProxyTypes.Http, "127.0.0.1", 3128, "", "",
+            var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser, 
+                ProxyTypes.Http, "127.0.0.1", 3128, "", "",
             new PasswordAuthenticationMethod(sshUser, sshPassword));
             
             using (var client = new SshClient(connectionInfo))
@@ -67,6 +68,7 @@ namespace MonsterMonitor.Logic.Ssh
                 {
                     _logger.Error("Cant connect to ssh!");
                 }
+                var cts = new CancellationTokenSource();
 
                 //add 3proxy port
                 var port = new ForwardedPortRemote(3329, "127.0.0.1", 3328);
@@ -75,6 +77,7 @@ namespace MonsterMonitor.Logic.Ssh
                 port.Exception += (sender, args) =>
                 {
                     _logger.Error(args.Exception.ToString());
+                    cts.Cancel();
                     if (client?.IsConnected == true)
                     {
                         client.Disconnect();
@@ -88,7 +91,7 @@ namespace MonsterMonitor.Logic.Ssh
                 _logger.Info($"Target OS type: {os}");
 
                 var command = isWindows ? "ping ya.ru -t0" : "ping ya.ru";
-                ExecuteCommand(client, command);
+                ExecuteCommand(client, command, cts.Token);
 
                 client.Disconnect();
             }
@@ -105,7 +108,7 @@ namespace MonsterMonitor.Logic.Ssh
             return false;
         }
 
-        private void ExecuteCommand(SshClient client, string command)
+        private void ExecuteCommand(SshClient client, string command, CancellationToken cancellationToken)
         {
             var cmd = client.CreateCommand(command);
             var result = cmd.BeginExecute();
@@ -114,6 +117,11 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 while (!result.IsCompleted || !reader.EndOfStream)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
                     string line = reader.ReadLine();
                     if (line != null)
                     {

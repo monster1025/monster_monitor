@@ -98,8 +98,6 @@ namespace MonsterMonitor.UI
                 checkboxes[i].Checked = processMonitor.IsRunning();
                 i++;
             }
-            _sshTunnel.Start(_settings.SshHost, _settings.SshPort, _settings.SshUser, _settings.SshPassword);
-
             _noSleep.StartMonitor();
             _authMonitor.StartMonitor();
             _connectionMonitor.StartMonitor();
@@ -113,6 +111,8 @@ namespace MonsterMonitor.UI
             {
                 tmrUpdate.Enabled = true;
             }
+
+            _sshTunnel.Start(_settings.SshHost, _settings.SshPort, _settings.SshUser, _settings.SshPassword);
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
