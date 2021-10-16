@@ -27,7 +27,7 @@ namespace MonsterMonitor.Logic
             };
         }
 
-        public void StartMonitor()
+        public async Task StartMonitor()
         {
             Task.Run(async () => await CheckProcess());
         }

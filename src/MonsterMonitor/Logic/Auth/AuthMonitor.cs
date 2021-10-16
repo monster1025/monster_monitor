@@ -35,7 +35,7 @@ namespace MonsterMonitor.Logic.Auth
             return GetWindowText(handle, buff, nChars) > 0 ? buff.ToString() : null;
         }
 
-        public void StartMonitor()
+        public async Task StartMonitor()
         {
             Task.Run(async () => await CheckProcess());
         }
@@ -74,6 +74,6 @@ namespace MonsterMonitor.Logic.Auth
 
     public interface IAuthMonitor
     {
-        void StartMonitor();
+        Task StartMonitor();
     }
 }

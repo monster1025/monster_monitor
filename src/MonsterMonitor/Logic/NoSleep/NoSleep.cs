@@ -18,7 +18,7 @@ namespace MonsterMonitor.Logic.NoSleep
             _logger = logger;
         }
 
-        public void StartMonitor()
+        public async Task StartMonitor()
         {
             Task.Run(async () => await CheckProcess());
         }
@@ -30,8 +30,7 @@ namespace MonsterMonitor.Logic.NoSleep
                 _logger.Info("Starting no-sleep");
                 if (SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
                                             | EXECUTION_STATE.ES_DISPLAY_REQUIRED
-                                            | EXECUTION_STATE.ES_SYSTEM_REQUIRED
-                                            | EXECUTION_STATE.ES_AWAYMODE_REQUIRED) == 0)
+                                            | EXECUTION_STATE.ES_SYSTEM_REQUIRED) == 0)
                 {
                     SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
                                             | EXECUTION_STATE.ES_DISPLAY_REQUIRED

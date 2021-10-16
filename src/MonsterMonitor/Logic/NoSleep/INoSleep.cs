@@ -1,7 +1,9 @@
-﻿namespace MonsterMonitor.Logic.NoSleep
+﻿using System.Threading.Tasks;
+
+namespace MonsterMonitor.Logic.NoSleep
 {
     public interface INoSleep
     {
-        void StartMonitor();
+        Task StartMonitor();
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace MonsterMonitor.Logic
+﻿using System.Threading.Tasks;
+
+namespace MonsterMonitor.Logic
 {
     public interface IConnectionMonitor
-    {
-        void StartMonitor();
+    { 
+        Task StartMonitor();
     }
 }

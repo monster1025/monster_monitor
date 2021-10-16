@@ -98,9 +98,9 @@ namespace MonsterMonitor.UI
                 checkboxes[i].Checked = processMonitor.IsRunning();
                 i++;
             }
-            _noSleep.StartMonitor();
-            _authMonitor.StartMonitor();
-            _connectionMonitor.StartMonitor();
+            _noSleep.StartMonitor().GetAwaiter().GetResult();
+            _authMonitor.StartMonitor().GetAwaiter().GetResult();
+            _connectionMonitor.StartMonitor().GetAwaiter().GetResult();
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
