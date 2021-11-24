@@ -28,14 +28,16 @@ namespace MonsterMonitor.Logic.NoSleep
             try
             {
                 _logger.Info("Starting no-sleep");
-                if (SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
-                                            | EXECUTION_STATE.ES_DISPLAY_REQUIRED
-                                            | EXECUTION_STATE.ES_SYSTEM_REQUIRED) == 0)
-                {
-                    SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
-                                            | EXECUTION_STATE.ES_DISPLAY_REQUIRED
-                                            | EXECUTION_STATE.ES_SYSTEM_REQUIRED); //Windows < Vista, forget away mode
-                }
+                var noSleepHelper = new NoSleepHelper();
+                noSleepHelper.EnableConstantDisplayAndPower(true);
+                //if (SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
+                //                            | EXECUTION_STATE.ES_DISPLAY_REQUIRED
+                //                            | EXECUTION_STATE.ES_SYSTEM_REQUIRED) == 0)
+                //{
+                //    SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS
+                //                            | EXECUTION_STATE.ES_DISPLAY_REQUIRED
+                //                            | EXECUTION_STATE.ES_SYSTEM_REQUIRED); //Windows < Vista, forget away mode
+                //}
             }
             catch (Exception ex)
             {
