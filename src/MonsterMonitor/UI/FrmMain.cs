@@ -81,7 +81,14 @@ namespace MonsterMonitor.UI
         {
             _logger.SetTarget(message =>
             {
-                txtLog.Invoke(new Action<string>(text => txtLog.AppendText(text)), message + Environment.NewLine);
+                txtLog.Invoke(new Action<string>(text =>
+                {
+                    if (txtLog.Text.Length > 100000)
+                    {
+                        txtLog.ResetText();
+                    }
+                    txtLog.AppendText(text);
+                }), message + Environment.NewLine);
             });
 
             this.Text = this.Text + " v" + Application.ProductVersion;
