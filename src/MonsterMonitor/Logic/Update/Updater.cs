@@ -146,7 +146,7 @@ namespace MonsterMonitor.Logic.Update
                         {
                             archiveEntry.ExtractToFile(Path.Combine(appFile.DirectoryName, archiveEntry.FullName), true);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
 
                         }

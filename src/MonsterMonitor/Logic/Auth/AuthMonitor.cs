@@ -37,7 +37,7 @@ namespace MonsterMonitor.Logic.Auth
 
         public async Task StartMonitor()
         {
-            Task.Run(async () => await CheckProcess());
+            _ = Task.Run(async () => await CheckProcess());
         }
 
         private async Task CheckProcess()

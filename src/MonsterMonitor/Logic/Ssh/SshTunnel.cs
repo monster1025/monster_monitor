@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using MonsterMonitor.Log;
 using Renci.SshNet;
 
@@ -44,7 +41,7 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 try
                 {
-                    Connect(sshHost, sshPort, sshUser, sshPassword);
+                    await Connect(sshHost, sshPort, sshUser, sshPassword);
                 }
                 catch (Exception ex)
                 {
@@ -54,7 +51,7 @@ namespace MonsterMonitor.Logic.Ssh
             }
         }
 
-        public void Connect(string sshHost, int sshPort, string sshUser, string sshPassword)
+        public async Task Connect(string sshHost, int sshPort, string sshUser, string sshPassword)
         {
             var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser, 
                 ProxyTypes.Http, "127.0.0.1", 3128, "", "",
@@ -91,7 +88,7 @@ namespace MonsterMonitor.Logic.Ssh
                 _logger.Info($"Target OS type: {os}");
 
                 var command = isWindows ? "ping ya.ru -t0" : "ping ya.ru";
-                ExecuteCommand(client, command, cts.Token);
+                await ExecuteCommand(client, command, cts.Token);
 
                 client.Disconnect();
             }
@@ -100,15 +97,10 @@ namespace MonsterMonitor.Logic.Ssh
         private bool TargetIsWindows(SshClient client)
         {
             var versionCommand = client.RunCommand("ver");
-            if (versionCommand.ExitStatus == 0)
-            {
-                return true;
-            }
-
-            return false;
+            return versionCommand.ExitStatus == 0;
         }
 
-        private void ExecuteCommand(SshClient client, string command, CancellationToken cancellationToken)
+        private async Task ExecuteCommand(SshClient client, string command, CancellationToken cancellationToken)
         {
             var cmd = client.CreateCommand(command);
             var result = cmd.BeginExecute();
@@ -122,11 +114,13 @@ namespace MonsterMonitor.Logic.Ssh
                         break;
                     }
 
-                    string line = reader.ReadLine();
+                    string line = await reader.ReadLineAsync();
                     if (line != null)
                     {
                         _logger.Info(line);
                     }
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
                 }
             }
 
