@@ -40,16 +40,12 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<SshTunnel>().As<ISshTunnel>().SingleInstance();
 
             _builder.Register(c=>
-                new ProcessMonitor("3proxy", "App_Data\\3proxy\\3proxy.exe", "3pr.cfg")
+                new ProcessMonitor("socks", "App_Data\\socks\\socks.exe")
             ).AsSelf().AsImplementedInterfaces();
 
             _builder.Register(c =>
                 new ProcessMonitor("px", "App_Data\\px-v0.4.0\\px.exe")
             ).AsSelf().AsImplementedInterfaces();
-            
-            //_builder.Register(c =>
-            //    new ProcessMonitor("myentunnel", "App_Data\\MyEnTunnel\\myentunnel.exe")
-            //).AsSelf().AsImplementedInterfaces();
 
             var container = _builder.Build();
             return container;

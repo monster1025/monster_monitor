@@ -126,9 +126,6 @@
     <EmbeddedResource Include="UI\frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="App_Data\3proxy\3pr.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="App_Data\px-v0.4.0\base_library.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -239,9 +236,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\3proxy\3proxy.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Data\px-v0.4.0\api-ms-win-core-console-l1-1-0.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -379,6 +373,9 @@
     </Content>
     <Content Include="App_Data\px-v0.4.0\VCRUNTIME140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\socks\socks.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>

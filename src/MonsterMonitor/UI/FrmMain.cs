@@ -94,8 +94,8 @@ namespace MonsterMonitor.UI
             this.Text = this.Text + " v" + Application.ProductVersion;
             var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
-            Generate3ProxyConfig(_settings);
-            _logger.Info($"Вы можете авторизоваться на прокси по кредам admin:{_settings.ThreeProxyPassword}");
+            //Generate3ProxyConfig(_settings);
+            //_logger.Info($"Вы можете авторизоваться на прокси по кредам admin:{_settings.ThreeProxyPassword}");
 
             int i = 0;
             foreach (var processMonitor in _processMonitors)
