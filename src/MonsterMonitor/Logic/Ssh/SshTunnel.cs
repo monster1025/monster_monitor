@@ -68,7 +68,7 @@ namespace MonsterMonitor.Logic.Ssh
                 var cts = new CancellationTokenSource();
 
                 //add 3proxy port
-                var port = new ForwardedPortRemote(3329, "127.0.0.1", 2080);
+                var port = new ForwardedPortRemote(3329, "127.0.0.1", 2180);
                 client.AddForwardedPort(port);
                 port.Start();
                 port.Exception += (sender, args) =>
