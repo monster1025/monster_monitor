@@ -189,7 +189,9 @@
     <None Include="App_Data\px-v0.4.0\_win32sysloader.pyd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="App_Data\socks\shinysocks.conf" />
+    <Content Include="App_Data\socks\shinysocks.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
