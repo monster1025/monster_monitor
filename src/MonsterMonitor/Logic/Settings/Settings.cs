@@ -15,7 +15,6 @@ namespace MonsterMonitor.Logic.Settings
         public int SshPort { get; set; }
         public string SshUser { get; set; }
         public string SshPassword { get; set; }
-        public bool PingCheck { get; set; }
         public string ThreeProxyPassword { get; set; }
 
         public static Settings Load()

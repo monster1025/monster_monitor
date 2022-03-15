@@ -21,7 +21,6 @@ namespace MonsterMonitor.UI
         private readonly IEnumerable<IProcessMonitor> _processMonitors;
         private readonly INoSleep _noSleep;
         private readonly IAuthMonitor _authMonitor;
-        private readonly IConnectionMonitor _connectionMonitor;
         private readonly ISshTunnel _sshTunnel;
         private readonly IUpdater _updater;
         private readonly ILog _logger;
@@ -34,7 +33,6 @@ namespace MonsterMonitor.UI
             IEnumerable<IProcessMonitor> processMonitors, 
             INoSleep noSleep, 
             IAuthMonitor authMonitor, 
-            IConnectionMonitor connectionMonitor,
             ISshTunnel sshTunnel,
             IUpdater updater, 
             ILog logger,
@@ -47,7 +45,6 @@ namespace MonsterMonitor.UI
             _processMonitors = processMonitors;
             _noSleep = noSleep;
             _authMonitor = authMonitor;
-            _connectionMonitor = connectionMonitor;
             _sshTunnel = sshTunnel;
             _updater = updater;
             _logger = logger;
@@ -107,7 +104,6 @@ namespace MonsterMonitor.UI
             }
             _noSleep.StartMonitor().GetAwaiter().GetResult();
             _authMonitor.StartMonitor().GetAwaiter().GetResult();
-            _connectionMonitor.StartMonitor().GetAwaiter().GetResult();
 
             if (System.Diagnostics.Debugger.IsAttached)
             {

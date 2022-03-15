@@ -33,7 +33,6 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<NoSleep>().As<INoSleep>().AsImplementedInterfaces();
             _builder.RegisterType<AuthMonitor>().As<IAuthMonitor>().AsImplementedInterfaces();
             _builder.RegisterType<Updater>().As<IUpdater>().AsImplementedInterfaces();
-            _builder.RegisterType<ConnectionMonitor>().As<IConnectionMonitor>().AsImplementedInterfaces();
             _builder.RegisterType<frmSettings>().AsSelf().SingleInstance();
             _builder.RegisterType<FrmMain>().AsSelf().SingleInstance();
             _builder.RegisterType<Logger>().As<ILog>().SingleInstance();

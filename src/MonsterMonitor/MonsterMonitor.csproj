@@ -77,8 +77,6 @@
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logic\Auth\AuthMonitor.cs" />
-    <Compile Include="Logic\ConnectionMonitor.cs" />
-    <Compile Include="Logic\IConnectionMonitor.cs" />
     <Compile Include="Logic\NoSleep\NoSleepHelper.cs" />
     <Compile Include="Logic\Settings\Settings.cs" />
     <Compile Include="Logic\Settings\PasswordEncryptionClass.cs" />
