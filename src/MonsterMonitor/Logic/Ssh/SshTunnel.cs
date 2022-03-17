@@ -33,8 +33,10 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 return;
             }
+            var cts = new CancellationTokenSource();
 
-            Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword));
+            Task.Run(async () => await PingWatcher(cts.Token), cts.Token);
+            Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword), cts.Token);
         }
 
         private async Task PingWatcher(CancellationToken cancellation)
@@ -83,6 +85,17 @@ namespace MonsterMonitor.Logic.Ssh
             }
             var cts = new CancellationTokenSource();
 
+            _client.ErrorOccurred += (sender, args) =>
+            {
+                _logger.Error($"[-] Client exception: {args.Exception}");
+                cts.Cancel();
+                if (_client?.IsConnected == true)
+                {
+                    _logger.Info("[-] SSH client disconnected.");
+                    _client.Disconnect();
+                }
+            };
+
             //add 3proxy port
             var port = new ForwardedPortRemote(3329, "127.0.0.1", 2180);
             _client.AddForwardedPort(port);
@@ -90,7 +103,7 @@ namespace MonsterMonitor.Logic.Ssh
             port.Exception += (sender, args) =>
             {
                 _logger.Error($"[-] Port forward exception: {args.Exception}");
-                _logger.Info("[+] SSH client disconnected.");
+                _logger.Info("[-] SSH client disconnected.");
                 cts.Cancel();
                 if (_client?.IsConnected == true)
                 {
