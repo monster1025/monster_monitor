@@ -11,6 +11,8 @@ namespace MonsterMonitor.Logic.Ssh
     public class SshTunnel : ISshTunnel
     {
         private readonly ILog _logger;
+        private DateTimeOffset _lastPingDate = DateTimeOffset.Now;
+        private SshClient _client = null;
 
         public SshTunnel(ILog logger)
         {
@@ -35,6 +37,22 @@ namespace MonsterMonitor.Logic.Ssh
             Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword));
         }
 
+        private async Task PingWatcher(CancellationToken cancellation)
+        {
+            while (!cancellation.IsCancellationRequested)
+            {
+                if (DateTimeOffset.Now - _lastPingDate <= TimeSpan.FromMinutes(5))
+                {
+                    continue;
+                }
+                _logger.Info("Не получен ответ от сервера за 5 сек. Переподключаюсь.");
+                if (_client?.IsConnected == true)
+                {
+                    _client.Disconnect();
+                }
+            }
+        }
+
         private async Task StartSshTask(string sshHost, int sshPort, string sshUser, string sshPassword)
         {
             while (true)
@@ -56,42 +74,40 @@ namespace MonsterMonitor.Logic.Ssh
             var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser, 
                 ProxyTypes.Http, "127.0.0.1", 3128, "", "",
             new PasswordAuthenticationMethod(sshUser, sshPassword));
-            
-            using (var client = new SshClient(connectionInfo))
+
+            _client = new SshClient(connectionInfo);
+            _client.Connect();
+            if (!_client.IsConnected)
             {
-                client.Connect();
-
-                if (!client.IsConnected)
-                {
-                    _logger.Error("Cant connect to ssh!");
-                }
-                var cts = new CancellationTokenSource();
-
-                //add 3proxy port
-                var port = new ForwardedPortRemote(3329, "127.0.0.1", 2180);
-                client.AddForwardedPort(port);
-                port.Start();
-                port.Exception += (sender, args) =>
-                {
-                    _logger.Error(args.Exception.ToString());
-                    cts.Cancel();
-                    if (client?.IsConnected == true)
-                    {
-                        client.Disconnect();
-                    }
-                };
-
-                _logger.Info("[+] SSH client connected.");
-
-                var isWindows = TargetIsWindows(client);
-                var os = isWindows ? "windows" : "linux";
-                _logger.Info($"Target OS type: {os}");
-
-                var command = isWindows ? "ping ya.ru -t0" : "ping ya.ru";
-                await ExecuteCommand(client, command, cts.Token);
-
-                client.Disconnect();
+                _logger.Error("[-] Cant connect to ssh!");
             }
+            var cts = new CancellationTokenSource();
+
+            //add 3proxy port
+            var port = new ForwardedPortRemote(3329, "127.0.0.1", 2180);
+            _client.AddForwardedPort(port);
+            port.Start();
+            port.Exception += (sender, args) =>
+            {
+                _logger.Error($"[-] Port forward exception: {args.Exception}");
+                _logger.Info("[+] SSH client disconnected.");
+                cts.Cancel();
+                if (_client?.IsConnected == true)
+                {
+                    _client.Disconnect();
+                }
+            };
+
+            _logger.Info("[+] SSH client connected.");
+
+            var isWindows = TargetIsWindows(_client);
+            var os = isWindows ? "windows" : "linux";
+            _logger.Info($"Target OS type: {os}");
+
+            var command = isWindows ? "ping ya.ru -t0" : "ping ya.ru";
+            await ExecuteCommand(_client, command, cts.Token);
+
+            _client.Disconnect();
         }
 
         private bool TargetIsWindows(SshClient client)
@@ -118,6 +134,7 @@ namespace MonsterMonitor.Logic.Ssh
                     if (line != null)
                     {
                         _logger.Info(line);
+                        _lastPingDate = DateTimeOffset.Now;
                     }
 
                     await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
