@@ -7,6 +7,7 @@ using MonsterMonitor.Log;
 using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
+using MonsterMonitor.Logic.PortMonitor;
 using MonsterMonitor.Logic.ProcessMonitor;
 using MonsterMonitor.Logic.Settings;
 using MonsterMonitor.Logic.Ssh;
@@ -22,6 +23,7 @@ namespace MonsterMonitor.UI
         private readonly INoSleep _noSleep;
         private readonly IAuthMonitor _authMonitor;
         private readonly ISshTunnel _sshTunnel;
+        private readonly IPortMonitor _portMonitor;
         private readonly IUpdater _updater;
         private readonly ILog _logger;
         private readonly Settings _settings;
@@ -34,6 +36,7 @@ namespace MonsterMonitor.UI
             INoSleep noSleep, 
             IAuthMonitor authMonitor, 
             ISshTunnel sshTunnel,
+            IPortMonitor portMonitor,
             IUpdater updater, 
             ILog logger,
             Settings settings,
@@ -46,6 +49,7 @@ namespace MonsterMonitor.UI
             _noSleep = noSleep;
             _authMonitor = authMonitor;
             _sshTunnel = sshTunnel;
+            _portMonitor = portMonitor;
             _updater = updater;
             _logger = logger;
             _settings = settings;
@@ -104,6 +108,7 @@ namespace MonsterMonitor.UI
             }
             _noSleep.StartMonitor().GetAwaiter().GetResult();
             _authMonitor.StartMonitor().GetAwaiter().GetResult();
+            _portMonitor.StartMonitor().GetAwaiter().GetResult();
 
             if (System.Diagnostics.Debugger.IsAttached)
             {

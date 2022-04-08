@@ -78,6 +78,8 @@
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logic\Auth\AuthMonitor.cs" />
     <Compile Include="Logic\NoSleep\NoSleepHelper.cs" />
+    <Compile Include="Logic\PortMonitor\PortMonitor.cs" />
+    <Compile Include="Logic\PortMonitor\IPortMonitor.cs" />
     <Compile Include="Logic\Settings\Settings.cs" />
     <Compile Include="Logic\Settings\PasswordEncryptionClass.cs" />
     <Compile Include="Logic\Ssh\ISshTunnel.cs" />
@@ -392,5 +394,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
