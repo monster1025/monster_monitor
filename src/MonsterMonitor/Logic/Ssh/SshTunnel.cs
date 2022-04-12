@@ -47,11 +47,13 @@ namespace MonsterMonitor.Logic.Ssh
                 {
                     continue;
                 }
+
                 _logger.Info("Не получен ответ от сервера за 5 сек. Переподключаюсь.");
                 if (_client?.IsConnected == true)
                 {
                     _client.Disconnect();
                 }
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellation);
             }
         }
 
@@ -79,6 +81,8 @@ namespace MonsterMonitor.Logic.Ssh
 
             _client = new SshClient(connectionInfo);
             _client.Connect();
+            _client.KeepAliveInterval = TimeSpan.FromSeconds(5);
+
             if (!_client.IsConnected)
             {
                 _logger.Error("[-] Cant connect to ssh!");

@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MonsterMonitor.Log;
-using MonsterMonitor.Logic;
 using MonsterMonitor.Logic.Auth;
 using MonsterMonitor.Logic.NoSleep;
 using MonsterMonitor.Logic.PortMonitor;
@@ -61,8 +60,8 @@ namespace MonsterMonitor.UI
         {
             if (message.Msg == SingleInstance.WM_SHOWFIRSTINSTANCE)
             {
-                this.Show();
-                this.WindowState = FormWindowState.Normal;
+                Show();
+                WindowState = FormWindowState.Normal;
                 _trayIcon.Hide();
             }
 
@@ -92,7 +91,7 @@ namespace MonsterMonitor.UI
                 }), message + Environment.NewLine);
             });
 
-            this.Text = this.Text + " v" + Application.ProductVersion;
+            Text = Text + " v" + Application.ProductVersion;
             var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
             //Generate3ProxyConfig(_settings);
@@ -135,13 +134,13 @@ namespace MonsterMonitor.UI
 
         private void frmMain_Resize(object sender, EventArgs e)
         {
-            if (FormWindowState.Minimized == this.WindowState)
+            if (FormWindowState.Minimized == WindowState)
             {
                 _trayIcon?.Show();
-                this.Hide();
+                Hide();
             }
 
-            else if (FormWindowState.Normal == this.WindowState)
+            else if (FormWindowState.Normal == WindowState)
             {
                 _trayIcon?.Hide();
             }
