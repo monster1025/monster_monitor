@@ -35,13 +35,13 @@ namespace MonsterMonitor.Logic.Ssh
             }
             var cts = new CancellationTokenSource();
 
-            Task.Run(async () => await PingWatcher(cts.Token), cts.Token);
-            Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword), cts.Token);
+            Task.Run(async () => await PingWatcher(cts));
+            Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword, cts));
         }
 
-        private async Task PingWatcher(CancellationToken cancellation)
+        private async Task PingWatcher(CancellationTokenSource cancellationTokenSource)
         {
-            while (!cancellation.IsCancellationRequested)
+            while (true)
             {
                 if (DateTimeOffset.Now - _lastPingDate <= TimeSpan.FromMinutes(5))
                 {
@@ -49,21 +49,24 @@ namespace MonsterMonitor.Logic.Ssh
                 }
 
                 _logger.Info("Не получен ответ от сервера за 5 сек. Переподключаюсь.");
+                cancellationTokenSource.Cancel();
+
                 if (_client?.IsConnected == true)
                 {
                     _client.Disconnect();
                 }
-                await Task.Delay(TimeSpan.FromSeconds(5), cancellation);
+                await Task.Delay(TimeSpan.FromSeconds(5));
             }
         }
 
-        private async Task StartSshTask(string sshHost, int sshPort, string sshUser, string sshPassword)
+        private async Task StartSshTask(string sshHost, int sshPort, string sshUser, string sshPassword,
+            CancellationTokenSource cancellationTokenSource)
         {
             while (true)
             {
                 try
                 {
-                    await Connect(sshHost, sshPort, sshUser, sshPassword);
+                    await Connect(sshHost, sshPort, sshUser, sshPassword, cancellationTokenSource);
                 }
                 catch (Exception ex)
                 {
@@ -73,7 +76,8 @@ namespace MonsterMonitor.Logic.Ssh
             }
         }
 
-        public async Task Connect(string sshHost, int sshPort, string sshUser, string sshPassword)
+        public async Task Connect(string sshHost, int sshPort, string sshUser, string sshPassword,
+            CancellationTokenSource cancellationTokenSource)
         {
             var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser, 
                 ProxyTypes.Http, "127.0.0.1", 3128, "", "",
@@ -87,12 +91,11 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 _logger.Error("[-] Cant connect to ssh!");
             }
-            var cts = new CancellationTokenSource();
 
             _client.ErrorOccurred += (sender, args) =>
             {
                 _logger.Error($"[-] Client exception: {args.Exception}");
-                cts.Cancel();
+                cancellationTokenSource.Cancel();
                 if (_client?.IsConnected == true)
                 {
                     _logger.Info("[-] SSH client disconnected.");
@@ -108,7 +111,7 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 _logger.Error($"[-] Port forward exception: {args.Exception}");
                 _logger.Info("[-] SSH client disconnected.");
-                cts.Cancel();
+                cancellationTokenSource.Cancel();
                 if (_client?.IsConnected == true)
                 {
                     _client.Disconnect();
@@ -122,7 +125,7 @@ namespace MonsterMonitor.Logic.Ssh
             _logger.Info($"Target OS type: {os}");
 
             var command = isWindows ? "ping ya.ru -t0" : "ping ya.ru";
-            await ExecuteCommand(_client, command, cts.Token);
+            await ExecuteCommand(_client, command, cancellationTokenSource.Token);
 
             _client.Disconnect();
         }
