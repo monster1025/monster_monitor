@@ -14,6 +14,7 @@ namespace MonsterMonitor.Logic.Ssh
         private readonly ILog _logger;
         private DateTimeOffset _lastPingDate = DateTimeOffset.Now;
         private SshClient _client = null;
+        private CancellationTokenSource _cancellationTokenSource = null;
         
         public SshTunnel(ILog logger)
         {
@@ -34,30 +35,34 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 return;
             }
-            var cts = new CancellationTokenSource();
-
-            Task.Run(async () => await PingWatcher(sshHost, sshPort, sshUser, sshPassword, cts));
-            Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword, cts));
+            Task.Run(async () => await PingWatcher(sshHost, sshPort, sshUser, sshPassword));
         }
 
-        private async Task PingWatcher(string sshHost, int sshPort, string sshUser, string sshPassword,
-            CancellationTokenSource cancellationTokenSource)
+        private async Task PingWatcher(string sshHost, int sshPort, string sshUser, string sshPassword)
         {
+            bool first = true;
             while (true)
             {
-                if (DateTimeOffset.Now - _lastPingDate <= TimeSpan.FromMinutes(5))
+                if (DateTimeOffset.Now - _lastPingDate <= TimeSpan.FromMinutes(5) && !first)
                 {
                     continue;
                 }
 
-                _logger.Info("Не получен ответ от сервера за 5 сек. Переподключаюсь.");
-                cancellationTokenSource.Cancel();
-
-                if (_client?.IsConnected == true)
+                if (!first)
                 {
-                    _client.Disconnect();
+                    _logger.Info("Не получен ответ от сервера за 5 сек. Переподключаюсь.");
+                    _cancellationTokenSource?.Cancel();
+
+                    if (_client?.IsConnected == true)
+                    {
+                        _client.Disconnect();
+                        _client.Dispose();
+                    }
                 }
-                Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword, cancellationTokenSource));
+
+                _cancellationTokenSource = new CancellationTokenSource();
+                Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword, _cancellationTokenSource));
+                first = false;
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
@@ -66,7 +71,7 @@ namespace MonsterMonitor.Logic.Ssh
         private async Task StartSshTask(string sshHost, int sshPort, string sshUser, string sshPassword,
             CancellationTokenSource cancellationTokenSource)
         {
-            while (true)
+            while (!cancellationTokenSource.IsCancellationRequested)
             {
                 try
                 {
