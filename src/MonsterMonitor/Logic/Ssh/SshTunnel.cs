@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -83,9 +84,13 @@ namespace MonsterMonitor.Logic.Ssh
         public async Task Connect(string sshHost, int sshPort, string sshUser, string sshPassword,
             CancellationTokenSource cancellationTokenSource)
         {
-            _logger.Info($"[Connect] Пытаюсь подключиться по адресу: {sshHost}:{sshPort}.");
+            var proxyType = ProxyTypes.Http;
+            if (Debugger.IsAttached)
+            {
+                proxyType = ProxyTypes.None;
+            }
 
-            var proxyType = ProxyTypes.None;
+            _logger.Info($"[Connect] Пытаюсь подключиться по адресу: {sshHost}:{sshPort}.");
 
             var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser,
                 proxyType, "127.0.0.1", 3128, "", "",
