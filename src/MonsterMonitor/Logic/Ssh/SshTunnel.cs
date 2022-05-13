@@ -13,7 +13,7 @@ namespace MonsterMonitor.Logic.Ssh
         private readonly ILog _logger;
         private DateTimeOffset _lastPingDate = DateTimeOffset.Now;
         private SshClient _client = null;
-
+        
         public SshTunnel(ILog logger)
         {
             _logger = logger;
@@ -35,11 +35,12 @@ namespace MonsterMonitor.Logic.Ssh
             }
             var cts = new CancellationTokenSource();
 
-            Task.Run(async () => await PingWatcher(cts));
+            Task.Run(async () => await PingWatcher(sshHost, sshPort, sshUser, sshPassword, cts));
             Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword, cts));
         }
 
-        private async Task PingWatcher(CancellationTokenSource cancellationTokenSource)
+        private async Task PingWatcher(string sshHost, int sshPort, string sshUser, string sshPassword,
+            CancellationTokenSource cancellationTokenSource)
         {
             while (true)
             {
@@ -55,6 +56,8 @@ namespace MonsterMonitor.Logic.Ssh
                 {
                     _client.Disconnect();
                 }
+                Task.Run(async () => await StartSshTask(sshHost, sshPort, sshUser, sshPassword, cancellationTokenSource));
+
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
         }
@@ -66,6 +69,7 @@ namespace MonsterMonitor.Logic.Ssh
             {
                 try
                 {
+                    _logger.Info($"Пытаюсь подключиться по адресу: {sshHost}:{sshPort}.");
                     await Connect(sshHost, sshPort, sshUser, sshPassword, cancellationTokenSource);
                 }
                 catch (Exception ex)
@@ -79,8 +83,12 @@ namespace MonsterMonitor.Logic.Ssh
         public async Task Connect(string sshHost, int sshPort, string sshUser, string sshPassword,
             CancellationTokenSource cancellationTokenSource)
         {
-            var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser, 
-                ProxyTypes.Http, "127.0.0.1", 3128, "", "",
+            _logger.Info($"[Connect] Пытаюсь подключиться по адресу: {sshHost}:{sshPort}.");
+
+            var proxyType = ProxyTypes.None;
+
+            var connectionInfo = new ConnectionInfo(sshHost, sshPort, sshUser,
+                proxyType, "127.0.0.1", 3128, "", "",
             new PasswordAuthenticationMethod(sshUser, sshPassword));
 
             _client = new SshClient(connectionInfo);
@@ -147,7 +155,7 @@ namespace MonsterMonitor.Logic.Ssh
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        break;
+                        return;
                     }
 
                     string line = await reader.ReadLineAsync();
