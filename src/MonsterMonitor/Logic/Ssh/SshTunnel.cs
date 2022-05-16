@@ -43,14 +43,14 @@ namespace MonsterMonitor.Logic.Ssh
             bool first = true;
             while (true)
             {
-                if (DateTimeOffset.Now - _lastPingDate <= TimeSpan.FromMinutes(5) && !first)
+                if (DateTimeOffset.Now - _lastPingDate <= TimeSpan.FromMinutes(2) && !first)
                 {
                     continue;
                 }
 
                 if (!first)
                 {
-                    _logger.Info("Не получен ответ от сервера за 5 сек. Переподключаюсь.");
+                    _logger.Info("Не получен ответ от сервера за 2 минуты. Переподключаюсь.");
                     _cancellationTokenSource?.Cancel();
 
                     if (_client?.IsConnected == true)

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -33,9 +35,13 @@ namespace MonsterMonitor.Logic.PortMonitor
                 while (true)
                 {
                     await Task.Delay(TimeSpan.FromMinutes(1));
-
-                    var isOpen = ScanPort(port);
-                    if (!isOpen)
+                    
+                    var isOpen = await CheckProxyAsync(port); // ScanPort(port);
+                    if (isOpen)
+                    {
+                        _logger.Info($"[PingCheck] Прокси проверен и жив.");
+                    }
+                    else
                     {
                         _logger.Info($"Прокси на порту {port} не отвечает. Перезапускаю.");
                         Kill();
@@ -54,6 +60,26 @@ namespace MonsterMonitor.Logic.PortMonitor
             foreach (var processInfo in processInfos)
             {
                 processInfo?.Kill();
+            }
+        }
+
+        private async Task<bool> CheckProxyAsync(int port)
+        {
+            var handler = new HttpClientHandler
+            {
+                Proxy = new WebProxy { Address = new Uri($"socks5://127.0.0.1:{port}") },
+                ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+            };
+            var client = new HttpClient(handler);
+            try
+            {
+                var ok = await client.GetAsync("http://jira.sibur.local");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Info($"[PingCheck] Ошибка подключения к прокси: {ex.Message}");
+                return false;
             }
         }
 
