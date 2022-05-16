@@ -36,7 +36,7 @@ namespace MonsterMonitor.Logic.PortMonitor
                 {
                     await Task.Delay(TimeSpan.FromMinutes(1));
                     
-                    var isOpen = await CheckProxyAsync(port); // ScanPort(port);
+                    var isOpen = ScanPort(port); // ScanPort(port);
                     if (isOpen)
                     {
                         _logger.Info($"[PingCheck] Прокси проверен и жив.");
