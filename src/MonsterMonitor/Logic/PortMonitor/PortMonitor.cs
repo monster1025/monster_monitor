@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MihaZupan;
 using MonsterMonitor.Log;
 using MonsterMonitor.Logic.NoSleep;
 
@@ -36,7 +37,7 @@ namespace MonsterMonitor.Logic.PortMonitor
                 {
                     await Task.Delay(TimeSpan.FromMinutes(1));
                     
-                    var isOpen = ScanPort(port); // ScanPort(port);
+                    var isOpen = await CheckProxyAsync(port); // ScanPort(port);
                     if (isOpen)
                     {
                         _logger.Info($"[PingCheck] Прокси проверен и жив.");
@@ -67,7 +68,8 @@ namespace MonsterMonitor.Logic.PortMonitor
         {
             var handler = new HttpClientHandler
             {
-                Proxy = new WebProxy { Address = new Uri($"socks5://127.0.0.1:{port}") },
+                Proxy = new HttpToSocks5Proxy("127.0.0.1", port),
+                //Proxy = new WebProxy { Address = new Uri($"socks5://127.0.0.1:{port}") },
                 ServerCertificateCustomValidationCallback = (_, _, _, _) => true
             };
             var client = new HttpClient(handler);
