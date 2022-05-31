@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MonsterMonitor.Log;
 using Renci.SshNet;
+using Renci.SshNet.Common;
 
 namespace MonsterMonitor.Logic.Ssh
 {
@@ -121,20 +122,16 @@ namespace MonsterMonitor.Logic.Ssh
                 }
             };
 
-            //add 3proxy port
+            //add proxy port
             var port = new ForwardedPortRemote(3329, "127.0.0.1", 2180);
             _client.AddForwardedPort(port);
             port.Start();
-            port.Exception += (sender, args) =>
-            {
-                _logger.Error($"[-] Port forward exception: {args.Exception}");
-                _logger.Info("[-] SSH client disconnected.");
-                cancellationTokenSource.Cancel();
-                if (_client?.IsConnected == true)
-                {
-                    _client.Disconnect();
-                }
-            };
+            port.Exception += (sender, args) => { PortException(sender, args, cancellationTokenSource); };
+
+            var portForReverseCheck = new ForwardedPortLocal(1111, "127.0.0.1", 3329);
+            _client.AddForwardedPort(portForReverseCheck);
+            portForReverseCheck.Start();
+            portForReverseCheck.Exception += (sender, args) => { PortException(sender, args, cancellationTokenSource); };
 
             _logger.Info("[+] SSH client connected.");
 
@@ -146,6 +143,17 @@ namespace MonsterMonitor.Logic.Ssh
             await ExecuteCommand(_client, command, cancellationTokenSource.Token);
 
             _client.Disconnect();
+        }
+
+        private void PortException(object sender, ExceptionEventArgs args, CancellationTokenSource cancellationTokenSource)
+        {
+            _logger.Error($"[-] Port forward exception: {args.Exception}");
+            _logger.Info("[-] SSH client disconnected.");
+            cancellationTokenSource.Cancel();
+            if (_client?.IsConnected == true)
+            {
+                _client.Disconnect();
+            }
         }
 
         private bool TargetIsWindows(SshClient client)

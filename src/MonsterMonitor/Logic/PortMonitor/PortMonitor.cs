@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MihaZupan;
 using MonsterMonitor.Log;
-using MonsterMonitor.Logic.NoSleep;
 
 namespace MonsterMonitor.Logic.PortMonitor
 {
@@ -31,7 +29,7 @@ namespace MonsterMonitor.Logic.PortMonitor
         {
             try
             {
-                const int port = 2180;
+                const int port = 1111; //2180 -- local proxy port, 1111 - reverse check port
                 _logger.Info("Starting port monitor");
                 while (true)
                 {
