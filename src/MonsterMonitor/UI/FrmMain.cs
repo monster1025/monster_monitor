@@ -72,9 +72,9 @@ namespace MonsterMonitor.UI
         {
             var config = $"users admin:CL:{settings.ThreeProxyPassword}\r\n" +
                                "auth strong\r\n"+
-                               "proxy -n -p3328";
+                               "socks -i127.0.0.1 -p2180";
             File.WriteAllText(Path
-                .Combine(Application.StartupPath, "App_Data", "3proxy", "3pr.cfg"), config);
+                .Combine(Application.StartupPath, "App_Data", "socks", "socks.cfg"), config);
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -94,8 +94,8 @@ namespace MonsterMonitor.UI
             Text = Text + " v" + Application.ProductVersion;
             var checkboxes = new List<CheckBox> {checkBox1, checkBox2, checkBox3};
 
-            //Generate3ProxyConfig(_settings);
-            //_logger.Info($"Вы можете авторизоваться на прокси по кредам admin:{_settings.ThreeProxyPassword}");
+            Generate3ProxyConfig(_settings);
+            _logger.Info($"Вы можете авторизоваться на прокси по кредам admin:{_settings.ThreeProxyPassword}");
 
             int i = 0;
             foreach (var processMonitor in _processMonitors)

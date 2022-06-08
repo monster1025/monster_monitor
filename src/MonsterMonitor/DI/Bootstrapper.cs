@@ -41,7 +41,7 @@ namespace MonsterMonitor.DI
             _builder.RegisterType<SshTunnel>().As<ISshTunnel>().SingleInstance();
 
             _builder.Register(c=>
-                new ProcessMonitor("socks", "App_Data\\socks\\socks.exe")
+                new ProcessMonitor("socks", "App_Data\\socks\\socks.exe", "socks.cfg")
             ).AsSelf().AsImplementedInterfaces();
 
             _builder.Register(c =>
